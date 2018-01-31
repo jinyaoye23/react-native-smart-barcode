@@ -6,16 +6,15 @@
  */
 
 
-import React, {
-    PropTypes,
-    Component,
-} from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types';
 import {
     View,
     requireNativeComponent,
     NativeModules,
     AppState,
     Platform,
+    ViewPropTypes
 } from 'react-native'
 
 const BarcodeManager = Platform.OS == 'ios' ? NativeModules.Barcode : NativeModules.CaptureModule
@@ -34,7 +33,7 @@ export default class Barcode extends Component {
     }
 
     static propTypes = {
-        ...View.propTypes,
+        ...ViewPropTypes,
         onBarCodeRead: PropTypes.func.isRequired,
         barCodeTypes: PropTypes.array,
         scannerRectWidth: PropTypes.number,
@@ -69,7 +68,7 @@ export default class Barcode extends Component {
     }
 
     _handleAppStateChange = (currentAppState) => {
-        if(currentAppState !== 'active' ) {
+        if (currentAppState !== 'active') {
             this.stopScan()
         }
         else {
