@@ -194,7 +194,7 @@ public class RCTCaptureManager extends ViewGroupManager<CaptureView> {
     @Override
     public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
         return MapBuilder.<String, Object>builder()
-                .put("QRCodeResult", MapBuilder.of("registrationName", "onBarCodeRead"))//registrationName 后的名字,RN中方法也要是这个名字否则不执行
+                .put("QRCodeResult", MapBuilder.of("registrationName", "onBarCodeReaded"))//registrationName 后的名字,RN中方法也要是这个名字否则不执行
                 .build();
     }
 
