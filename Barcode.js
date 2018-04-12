@@ -30,7 +30,6 @@ export default class Barcode extends Component {
         scannerRectLeft: 0,
         scannerLineInterval: 3000,
         scannerRectCornerColor: `#09BB0D`,
-        onBarCodeReaded: () => {},
     }
 
     static propTypes = {
