@@ -45,10 +45,12 @@ export default class Barcode extends Component {
     }
 
     render() {
+        let onBarCodeRead = this.props.onBarCodeRead;
+        delete this.props.onBarCodeRead;
         return (
             <NativeBarCode
                 {...this.props}
-                onBarCodeReaded={this.props.onBarCodeRead}
+                onBarCodeReaded={onBarCodeRead}
             />
         )
     }

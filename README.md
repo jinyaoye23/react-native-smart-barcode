@@ -167,7 +167,7 @@ class BarcodeTest extends Component {
             <View style={{flex: 1, backgroundColor: 'black',}}>
                 {this.state.viewAppear ? <Barcode style={{flex: 1, }}
                                                   ref={ component => this._barCode = component }
-                                                  onBarCodeRead={this._onBarCodeRead}/> : null}
+                                                  onBarCodeReaded={this._onBarCodeRead}/> : null}
             </View>
         )
     }

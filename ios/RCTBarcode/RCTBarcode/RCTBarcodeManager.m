@@ -247,14 +247,14 @@ RCT_EXPORT_METHOD(stopSession) {
 //        NSLog(@"type = %@, data = %@", metadata.type, metadata.stringValue);
         for (id barcodeType in self.barCodeTypes) {
             if ([metadata.type isEqualToString:barcodeType]) {
-                if (!self.barcode.onBarCodeRead) {
+                if (!self.barcode.onBarCodeReaded) {
                     return;
                 }
                 
                 AudioServicesPlaySystemSound(self.beep_sound_id);
                 
 //                NSLog(@"type = %@, data = %@", metadata.type, metadata.stringValue);
-                self.barcode.onBarCodeRead(@{
+                self.barcode.onBarCodeReaded(@{
                                               @"data": @{
                                                         @"type": metadata.type,
                                                         @"code": metadata.stringValue,
