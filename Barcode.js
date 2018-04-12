@@ -30,11 +30,12 @@ export default class Barcode extends Component {
         scannerRectLeft: 0,
         scannerLineInterval: 3000,
         scannerRectCornerColor: `#09BB0D`,
+        onBarCodeReaded: () => {},
     }
 
     static propTypes = {
         ...ViewPropTypes,
-        onBarCodeRead: PropTypes.func.isRequired,
+        onBarCodeReaded: PropTypes.func.isRequired,
         barCodeTypes: PropTypes.array,
         scannerRectWidth: PropTypes.number,
         scannerRectHeight: PropTypes.number,
@@ -45,7 +46,7 @@ export default class Barcode extends Component {
     }
 
     render() {
-        let onBarCodeRead = this.props.onBarCodeRead;
+        let onBarCodeRead = this.props.onBarCodeReaded ? this.props.onBarCodeReaded : this.props.onBarCodeRead;
         delete this.props.onBarCodeRead;
         return (
             <NativeBarCode
