@@ -5,6 +5,7 @@
 //#define WIDTH                 [UIScreen mainScreen].bounds.size.width
 //#define HEIGHT                [UIScreen mainScreen].bounds.size.height
 //#define LINE_SCAN_INTERVAL  3.0     // 扫描线从上到下扫描所历时间（s）
+#define isPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
 
 @interface RCTBarcode()
 
@@ -60,13 +61,19 @@
 - (void)updateLayout{
     
 //    NSLog(@"updateLayout...");
-    
-    int scannerRectWidth = self.scannerRectWidth;//300;
-    int scannerRectHeight = self.scannerRectHeight;//300;
+    CGFloat navigationHeight = 0.0;
+    if(isPhoneX){
+        navigationHeight = 88.0;
+    }
+    else{
+        navigationHeight = 64.0;
+    }
+    NSInteger scannerRectWidth = self.scannerRectWidth;//300;
+    NSInteger scannerRectHeight = self.scannerRectHeight;//300;
     
     CGRect cameraRect = self.bounds;
     //中间的矩形框
-    self.scannerRect = CGRectMake( (cameraRect.size.width - scannerRectWidth) / 2, (cameraRect.size.height - scannerRectHeight) / 2, scannerRectWidth, scannerRectHeight);
+    self.scannerRect = CGRectMake( (cameraRect.size.width - scannerRectWidth) / 2, (cameraRect.size.height - scannerRectHeight - navigationHeight) / 2, scannerRectWidth, scannerRectHeight);
 
     RectView *view = [[RectView alloc] initWithScannerRect:self.scannerRect frame:self.bounds scannerRectCornerColor:self.scannerRectCornerColor];
 //    RectView *view = [[RectView alloc] initWithFrame:self.bounds];
@@ -160,11 +167,17 @@
 #pragma mark 移动扫描线
 - (void)moveUpAndDownLine {
 //    NSLog(@"moveUpAndDownLine");
-    
+    CGFloat navigationHeight = 0.0;
+    if(isPhoneX){
+        navigationHeight = 88.0;
+    }
+    else{
+        navigationHeight = 64.0;
+    }
     CGRect readerFrame = self.frame;
     CGSize viewFinderSize = self.scannerRect.size;
     CGRect scanLineframe = self.scanLine.frame;
-    scanLineframe.origin.y = (readerFrame.size.height - viewFinderSize.height)/2;
+    scanLineframe.origin.y = (readerFrame.size.height - viewFinderSize.height - navigationHeight)/2;
     self.scanLine.frame = scanLineframe;
     self.scanLine.hidden = NO;
     __weak __typeof(self) weakSelf = self;
@@ -172,7 +185,7 @@
                      animations:^{
                          CGRect scanLineframe = weakSelf.scanLine.frame;
                          scanLineframe.origin.y =
-                         (readerFrame.size.height + viewFinderSize.height)/2 -
+                         (readerFrame.size.height + viewFinderSize.height - navigationHeight)/2 -
                          weakSelf.scanLine.frame.size.height;
                          weakSelf.scanLine.frame = scanLineframe;
                      }
