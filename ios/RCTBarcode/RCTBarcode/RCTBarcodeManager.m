@@ -149,6 +149,27 @@ RCT_EXPORT_METHOD(startSession) {
     });
 }
 
+/* add by David at 2019-02-14 start */
+// 识别相册二维码
+RCT_EXPORT_METHOD(analysisQRcode:(NSString *) path
+                  resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)reject) {
+    
+    UIImage * image = [UIImage imageWithContentsOfFile:path];
+    CIDetector * detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{ CIDetectorAccuracy : CIDetectorAccuracyHigh }];
+    // 取得识别结果
+    NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
+    NSString *resultStr =@"";
+    if (features.count >=1) {
+        for (int index = 0; index < [features count]; index ++) {
+            CIQRCodeFeature *feature = [features objectAtIndex:index];
+            resultStr = feature.messageString;
+            NSLog(@"相册中读取二维码数据信息 - - %@", resultStr);
+        }
+    }
+    resolver(resultStr);
+}
+/* add by David at 2019-02-14 end */
+
 RCT_EXPORT_METHOD(stopSession) {
     #if TARGET_IPHONE_SIMULATOR
     return;

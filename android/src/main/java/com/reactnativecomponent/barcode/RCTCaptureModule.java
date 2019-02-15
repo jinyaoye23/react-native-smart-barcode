@@ -2,14 +2,17 @@ package com.reactnativecomponent.barcode;
 
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.google.zxing.BarcodeFormat;
 import com.reactnativecomponent.barcode.decoding.DecodeUtil;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -125,6 +128,28 @@ public class RCTCaptureModule extends ReactContextBaseJavaModule {
             });
         }
     }
+
+    /* add by David at 2019-02-14 start */
+    // 识别相册二维码
+    @ReactMethod
+    public void analysisQRcode(String path, final Promise promise) {
+
+        try {
+            if(path.startsWith("file://")){
+                path=path.substring(7,path.length());
+            }
+            final String qrcontent = QRUtils.getInstance().decodeQRcodeByZxing(path);
+            if (!TextUtils.isEmpty(qrcontent)) {
+                promise.resolve(qrcontent);
+            } else {
+                Toast.makeText(getCurrentActivity(), "识别失败！", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e) {
+
+        }
+    }
+    /* add by David at 2019-02-14 end */
 
     @ReactMethod
     public void DecodeFromPath(final String path,
