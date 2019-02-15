@@ -20,5 +20,7 @@
 - (void)startSession;
 - (void)stopSession;
 - (void)endSession;
+- (void)analysisQRcode;
+
 
 @end

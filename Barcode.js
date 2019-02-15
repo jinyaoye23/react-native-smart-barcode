@@ -34,7 +34,7 @@ export default class Barcode extends Component {
 
     static propTypes = {
         ...ViewPropTypes,
-//         onBarCodeReaded: PropTypes.func.isRequired,
+        //         onBarCodeReaded: PropTypes.func.isRequired,
         onBarCodeReaded: PropTypes.func,
         barCodeTypes: PropTypes.array,
         scannerRectWidth: PropTypes.number,
@@ -70,6 +70,14 @@ export default class Barcode extends Component {
     stopScan() {
         BarcodeManager.stopSession()
     }
+
+    /* add by David at 2019-02-14 start */
+    // 识别相册二维码
+    static async analysisQRcode(path) {
+        let result = await BarcodeManager.analysisQRcode(path)
+        return result
+    }
+    /* add by David at 2019-02-14 end */
 
     _handleAppStateChange = (currentAppState) => {
         if (currentAppState !== 'active') {
