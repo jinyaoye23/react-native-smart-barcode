@@ -138,7 +138,9 @@ public class RCTCaptureModule extends ReactContextBaseJavaModule {
             if(path.startsWith("file://")){
                 path=path.substring(7,path.length());
             }
-            final String qrcontent = QRUtils.getInstance().decodeQRcodeByZxing(path);
+//            final String qrcontent = QRUtils.getInstance().decodeQRcodeByZxing(path);
+            final String qrcontent = QRUtils.getInstance().decodeQRcodeByZxing(getCurrentActivity(), path);
+
             if (!TextUtils.isEmpty(qrcontent)) {
                 promise.resolve(qrcontent);
             } else {
