@@ -2,45 +2,30 @@ package com.reactnativecomponent.barcode;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.DecodeHintType;
 import com.google.zxing.EncodeHintType;
-import com.google.zxing.FormatException;
-import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.common.GlobalHistogramBinarizer;
-import com.google.zxing.qrcode.QRCodeReader;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.reactnativecomponent.barcode.decoding.BitmapDecoder;
+import com.reactnativecomponent.barcode.decoding.BitmapUtils;
 
 import java.util.Hashtable;
 
-//import cn.bertsir.zbar.Qr.Config;
-//import cn.bertsir.zbar.Qr.Image;
-//import cn.bertsir.zbar.Qr.ImageScanner;
-//import cn.bertsir.zbar.Qr.Symbol;
-//import cn.bertsir.zbar.Qr.SymbolSet;
 
 /**
  * Created by Bert on 2017/9/20.
@@ -113,41 +98,53 @@ public class QRUtils {
      * @param path
      * @return
      */
-    public String decodeQRcodeByZxing(String path) {
+    public String decodeQRcodeByZxing(Context context,String path) {
         if (TextUtils.isEmpty(path)) {
             return null;
-
         }
-        Hashtable<DecodeHintType, String> hints = new Hashtable();
-        hints.put(DecodeHintType.CHARACTER_SET, "UTF-8"); // 设置二维码内容的编码
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true; // 先获取原大小
-        scanBitmap = BitmapFactory.decodeFile(path,options);
-        options.inJustDecodeBounds = false;
-        int sampleSize = (int) (options.outHeight / (float) 200);
-        if (sampleSize <= 0)
-            sampleSize = 1;
-        options.inSampleSize = sampleSize;
-        scanBitmap = BitmapFactory.decodeFile(path, options);
-        int[] data = new int[scanBitmap.getWidth() * scanBitmap.getHeight()];
-        scanBitmap.getPixels(data, 0, scanBitmap.getWidth(), 0, 0, scanBitmap.getWidth(), scanBitmap.getHeight());
-        RGBLuminanceSource rgbLuminanceSource = new RGBLuminanceSource(scanBitmap.getWidth(),scanBitmap.getHeight(),data);
-        BinaryBitmap binaryBitmap = new BinaryBitmap(new GlobalHistogramBinarizer(rgbLuminanceSource));
-        MultiFormatReader reader = new MultiFormatReader();
-        Result result = null;
+
+        /** modified by david at 2019-03-19 start */
+        // 相册识别二维码优化
         try {
-            result = reader.decode(binaryBitmap, hints);
-        } catch (NotFoundException e) {
-
-        }catch (Exception e){
-
-        }
-        if(result == null){
-            return "";
-        }else {
+            Bitmap img = BitmapUtils.getCompressedBitmap(path);
+            BitmapDecoder decoder = new BitmapDecoder(context);
+            Result result = decoder.getRawResult(img);
             return result.getText();
-        }
+        } catch (Exception e) {
 
+        }
+        return null;
+
+//        Hashtable<DecodeHintType, String> hints = new Hashtable();
+//        hints.put(DecodeHintType.CHARACTER_SET, "UTF-8"); // 设置二维码内容的编码
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inJustDecodeBounds = true; // 先获取原大小
+//        scanBitmap = BitmapFactory.decodeFile(path,options);
+//        options.inJustDecodeBounds = false;
+//        int sampleSize = (int) (options.outHeight / (float) 200);
+//        if (sampleSize <= 0)
+//            sampleSize = 1;
+//        options.inSampleSize = sampleSize;
+//        scanBitmap = BitmapFactory.decodeFile(path, options);
+//        int[] data = new int[scanBitmap.getWidth() * scanBitmap.getHeight()];
+//        scanBitmap.getPixels(data, 0, scanBitmap.getWidth(), 0, 0, scanBitmap.getWidth(), scanBitmap.getHeight());
+//        RGBLuminanceSource rgbLuminanceSource = new RGBLuminanceSource(scanBitmap.getWidth(),scanBitmap.getHeight(),data);
+//        BinaryBitmap binaryBitmap = new BinaryBitmap(new GlobalHistogramBinarizer(rgbLuminanceSource));
+//        MultiFormatReader reader = new MultiFormatReader();
+//        Result result = null;
+//        try {
+//            result = reader.decode(binaryBitmap, hints);
+//        } catch (NotFoundException e) {
+//
+//        }catch (Exception e){
+//
+//        }
+//        if(result == null){
+//            return "";
+//        }else {
+//            return result.getText();
+//        }
+        /** modified by david at 2019-03-19 end */
     }
 
 
