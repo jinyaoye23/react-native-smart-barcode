@@ -165,6 +165,8 @@ RCT_EXPORT_METHOD(analysisQRcode:(NSString *) path
             resultStr = feature.messageString;
             NSLog(@"相册中读取二维码数据信息 - - %@", resultStr);
         }
+    }else {
+        resultStr = @"未识别出任何信息";
     }
     resolver(resultStr);
 }
