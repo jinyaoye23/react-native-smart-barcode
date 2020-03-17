@@ -31,6 +31,11 @@ RCT_CUSTOM_VIEW_PROPERTY(barCodeTypes, NSArray, RCTBarcode) {
     self.barCodeTypes = [RCTConvert NSArray:json];
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+    
 - (UIView *)view
 {
     self.session = [[AVCaptureSession alloc]init];
@@ -124,6 +129,13 @@ RCT_EXPORT_METHOD(startSession) {
                 [self.metadataOutput setMetadataObjectsDelegate:self queue:self.sessionQueue];
                 [self.session addOutput:self.metadataOutput];
 //                  [metadataOutput setMetadataObjectTypes:self.metadataOutput.availableMetadataObjectTypes];
+                // add by Stephen at 2020-03-17 start 判断权限，防止crash
+                NSString *mediaTye = AVMediaTypeVideo;
+                AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:mediaTye];
+                if (status == AVAuthorizationStatusRestricted || status == AVAuthorizationStatusDenied) {
+                    return;
+                }
+                // add by Stephen at 2020-03-17 end  判断权限，防止crash
                 [self.metadataOutput setMetadataObjectTypes:self.barCodeTypes];
             }
             
